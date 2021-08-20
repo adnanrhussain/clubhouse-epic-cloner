@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 // import yargs from "yargs";
-import { hideBin } from "yargs/helpers";
+// import { hideBin } from "yargs/helpers";
 import yaml from "js-yaml";
 import fs from "fs";
 import Clubhouse from "clubhouse-lib";
@@ -58,7 +58,20 @@ const cloneStory = async (story) => {
   };
   clonedStory = await client.createStory(clonedStory);
   clonedStories[story.id] = clonedStory.id;
+  if (story.task_ids && story.task_ids.length) {
+    await cloneStoryTasks(story, clonedStory);
+  }
   return clonedStory;
+};
+
+const cloneStoryTasks = async (story, clonedStory) => {
+  for (const task_id of story.task_ids) {
+    const task = await client.getTask(story.id, task_id);
+    const clonedTask = {
+      description: task.description,
+    };
+    await client.createTask(clonedStory.id, clonedTask);
+  }
 };
 
 const cloneStoryLinks = async (story) => {
@@ -71,10 +84,17 @@ const cloneStoryLinks = async (story) => {
       continue;
     }
 
+    const cloned_story_id = clonedStories[storyLink.object_id];
+    const cloned_subject_story_id = clonedStories[storyLink.subject_id];
+
+    if (!cloned_story_id || !cloned_subject_story_id) {
+      continue;
+    }
+
     const clonedStoryLink = {
-      object_id: clonedStories[storyLink.object_id],
+      object_id: cloned_story_id,
       verb: storyLink.verb,
-      subject_id: clonedStories[storyLink.subject_id],
+      subject_id: cloned_subject_story_id,
     };
     await client.createStoryLink(clonedStoryLink);
   }

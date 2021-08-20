@@ -11,6 +11,10 @@ To clone the repo (more [info](https://git-scm.com/book/en/v2/Git-Basics-Getting
 Install the dependencies
 ```
 cd clubhouse-epic-cloner
+cd clubhouse-lib
+npm install
+npm run build
+cd ..
 npm install
 ```
 
