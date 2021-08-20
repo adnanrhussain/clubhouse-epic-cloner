@@ -1,0 +1,15 @@
+{
+  "name": "clubhouse_epic_cloner",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "index": "./index.js"
+  },
+  "author": "Adnan Hussain",
+  "dependencies": {
+    "clubhouse-lib": "file:clubhouse-lib",
+    "js-yaml": "^4.1.0",
+    "yargs": "^17.1.1"
+  }
+}
